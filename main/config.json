@@ -1,0 +1,8 @@
+{
+    "base_url": "https://your-xui-panel.com:54321",
+    "username": "your_username",
+    "password": "your_password",
+    "dingtalk_webhook": "https://oapi.dingtalk.com/robot/send?access_token=your_access_token",
+    "cookies": null,
+    "cookie_timestamp": null
+}
