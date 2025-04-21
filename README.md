@@ -88,6 +88,9 @@ cp main/config.template.json main/config.json
     "username": "your_username",  // 登录用户名
     "password": "your_password",  // 登录密码
     "dingtalk_webhook": "https://oapi.dingtalk.com/robot/send?access_token=your_access_token"  // 钉钉机器人webhook
+    // 下面两个cookie不需要设置
+    "cookies": null,
+    "cookie_timestamp": null
 }
 ```
 
