@@ -3,22 +3,17 @@ import requests
 import json
 import pickle
 import time
-from dotenv import load_dotenv
-
-# 加载 .env 文件中的环境变量
-load_dotenv()
 
 def load_config():
     try:
-        # 从环境变量中读取配置
-        config = {
-            "base_url": os.getenv("XUI_BASE_URL"),
-            "username": os.getenv("XUI_USERNAME"),
-            "password": os.getenv("XUI_PASSWORD"),
-            "dingtalk_webhook": os.getenv("DINGTALK_WEBHOOK")
-        }
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        config_path = os.path.join(script_dir, "config.json")
+        if not os.path.exists(config_path):
+            raise FileNotFoundError("配置文件 config.json 不存在，请创建并填写必要的配置")
+        with open(config_path, "r", encoding="utf-8") as f:
+            config = json.load(f)
         if not all(config.values()):
-            raise ValueError("环境变量配置不完整，请检查 XUI_BASE_URL, XUI_USERNAME, XUI_PASSWORD, DINGTALK_WEBHOOK")
+            raise ValueError("配置文件内容不完整，请检查 base_url, username, password, dingtalk_webhook")
         return config
     except Exception as e:
         print(f"加载配置时发生错误: {str(e)}")

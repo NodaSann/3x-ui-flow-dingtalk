@@ -1,0 +1,6 @@
+{
+    "base_url": "https://kk.323424.xyz:3000",
+    "username": "admin",
+    "password": "admin",
+    "dingtalk_webhook": "https://oapi.dingtalk.com/robot/send?access_token=887f18d64ea620e2f641c2c0058f9a5dafa2d8cf10bdcca2a8f67f7dbea00479"
+}
