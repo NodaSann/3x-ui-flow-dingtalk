@@ -1,6 +1,19 @@
 {
-    "base_url": "https://kk.323424.xyz:3000",
-    "username": "admin",
-    "password": "admin",
-    "dingtalk_webhook": "https://oapi.dingtalk.com/robot/send?access_token=887f18d64ea620e2f641c2c0058f9a5dafa2d8cf10bdcca2a8f67f7dbea00479"
+    // x-ui 面板的基础URL，包括协议(http/https)和端口号
+    "base_url": "https://your-xui-panel.com:54321",
+    
+    // 面板登录用户名
+    "username": "your_username",
+    
+    // 面板登录密码
+    "password": "your_password",
+    
+    // 钉钉机器人webhook地址，用于发送流量统计信息
+    "dingtalk_webhook": "https://oapi.dingtalk.com/robot/send?access_token=your_access_token",
+    
+    // cookies字段会在登录成功后自动填充，初次使用无需手动设置
+    "cookies": null,
+    
+    // cookie时间戳，记录cookie保存时间，初次使用无需手动设置
+    "cookie_timestamp": null
 }

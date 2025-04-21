@@ -12,40 +12,66 @@ def load_config():
             raise FileNotFoundError("配置文件 config.json 不存在，请创建并填写必要的配置")
         with open(config_path, "r", encoding="utf-8") as f:
             config = json.load(f)
-        if not all(config.values()):
-            raise ValueError("配置文件内容不完整，请检查 base_url, username, password, dingtalk_webhook")
+        
+        # 只检查必要的配置项
+        required_keys = ["base_url", "username", "password", "dingtalk_webhook"]
+        for key in required_keys:
+            if not config.get(key):
+                raise ValueError(f"配置文件缺少必要项: {key}")
         return config
     except Exception as e:
         print(f"加载配置时发生错误: {str(e)}")
         return None
 
-def save_cookies(session, cookie_file="cookies.pkl"):
+def save_cookies(session, config_file="config.json"):
     try:
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        cookie_path = os.path.join(script_dir, cookie_file)
-        with open(cookie_path, 'wb') as f:
-            pickle.dump({
-                'cookies': session.cookies,
-                'timestamp': time.time(),
-            }, f)
-        print(f"Cookies已保存到 {cookie_path}")
+        config_path = os.path.join(script_dir, config_file)
+        
+        # 读取当前配置
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        
+        # 将cookies转换为字典
+        cookies_dict = requests.utils.dict_from_cookiejar(session.cookies)
+        
+        # 更新配置中的cookies和时间戳
+        config['cookies'] = cookies_dict
+        config['cookie_timestamp'] = time.time()
+        
+        # 写回配置文件
+        with open(config_path, 'w', encoding='utf-8') as f:
+            json.dump(config, f, indent=4, ensure_ascii=False)
+            
+        print(f"Cookies已保存到 {config_path}")
         return True
     except Exception as e:
         print(f"保存cookies时发生错误: {str(e)}")
         return False
 
-def load_cookies(cookie_file="cookies.pkl"):
+def load_cookies(config_file="config.json"):
     try:
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        cookie_path = os.path.join(script_dir, cookie_file)
-        if not os.path.exists(cookie_path):
-            print("找不到cookies文件，需要重新登录")
+        config_path = os.path.join(script_dir, config_file)
+        
+        if not os.path.exists(config_path):
+            print("找不到配置文件，需要重新登录")
             return None
-        with open(cookie_path, 'rb') as f:
-            cookie_data = pickle.load(f)
+            
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        
+        # 检查是否存在cookies
+        if not config.get('cookies'):
+            print("配置文件中没有cookies信息，需要重新登录")
+            return None
+            
+        # 创建会话并加载cookies
         session = requests.Session()
-        session.cookies = cookie_data['cookies']
-        print(f"已从 {cookie_path} 加载cookies")
+        cookies = requests.utils.cookiejar_from_dict(config['cookies'])
+        session.cookies = cookies
+        
+        print(f"已从配置文件加载cookies")
         return session
     except Exception as e:
         print(f"加载cookies时发生错误: {str(e)}")
